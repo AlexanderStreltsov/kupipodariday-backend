@@ -5,35 +5,39 @@ import {
   MinLength,
   MaxLength,
   IsOptional,
+  IsUrl,
 } from 'class-validator';
+import {
+  mustBeEmail,
+  mustBeString,
+  mustBeMinLength,
+  mustBeMaxLength,
+  mustBeUrl,
+  mustBeNotEmpty,
+} from '../../constants/error-messages';
 
 export class CreateUserDto {
-  @IsEmail()
+  @IsString({ message: mustBeString('email') })
+  @IsEmail({}, { message: mustBeEmail('email') })
   email: string;
 
-  @IsNotEmpty()
+  @IsString({ message: mustBeString('password') })
+  @IsNotEmpty({ message: mustBeNotEmpty('password') })
   password: string;
 
-  @IsString()
-  @MinLength(2, {
-    message: 'Имя пользователя должно быть не менее 2 символов',
-  })
-  @MaxLength(30, {
-    message: 'Имя пользователя должно быть не более 30 символов',
-  })
+  @IsString({ message: mustBeString('username') })
+  @MinLength(2, { message: mustBeMinLength('username', 2) })
+  @MaxLength(30, { message: mustBeMaxLength('username', 30) })
   username: string;
 
-  @IsString()
+  @IsString({ message: mustBeString('avatar') })
+  @IsUrl({}, { message: mustBeUrl('avatar') })
   @IsOptional()
-  avatar?: 'https://i.pravatar.cc/150';
+  avatar?: string;
 
-  @IsString()
+  @IsString({ message: mustBeString('about') })
+  @MinLength(2, { message: mustBeMinLength('about', 2) })
+  @MaxLength(200, { message: mustBeMaxLength('about', 200) })
   @IsOptional()
-  @MinLength(2, {
-    message: 'Описание профиля должно быть не менее 2 символов',
-  })
-  @MaxLength(200, {
-    message: 'Описание профиля должно быть не более 200 символов',
-  })
   about?: string;
 }

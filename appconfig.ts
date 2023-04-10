@@ -1,6 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as dotenvExpand from 'dotenv-expand';
 
+/**
+ * this add to wait load env into configuration ormconfig.ts
+ */
 dotenvExpand.expand(dotenv.config());
 
 export default () => ({

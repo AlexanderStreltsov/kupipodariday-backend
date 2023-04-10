@@ -4,9 +4,10 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { HashService } from '../hash/hash.service';
+import { WishesModule } from '../wishes/wishes.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), WishesModule],
   controllers: [UsersController],
   providers: [UsersService, HashService],
   exports: [UsersService],

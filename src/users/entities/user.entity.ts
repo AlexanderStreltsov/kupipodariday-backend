@@ -4,6 +4,7 @@ import { CommonInfo } from '../../utils';
 import { Offer } from '../../offers/entities/offer.entity';
 import { Wish } from '../../wishes/entities/wish.entity';
 import { Wishlist } from '../../wishlists/entities/wishlist.entity';
+import { USER_ABOUT, USER_AVATAR } from '../../constants/default-values';
 
 @Entity()
 export class User extends CommonInfo {
@@ -14,20 +15,14 @@ export class User extends CommonInfo {
   @Length(2, 30)
   username: string;
 
-  @Column('varchar', {
-    default: 'Пока ничего не рассказал о себе',
-  })
+  @Column('varchar', { default: USER_ABOUT })
   @Length(2, 200)
   about: string;
 
-  @Column({
-    default: 'https://i.pravatar.cc/300',
-  })
+  @Column({ default: USER_AVATAR })
   avatar: string;
 
-  @Column({
-    unique: true,
-  })
+  @Column({ unique: true })
   @IsEmail()
   email: string;
 

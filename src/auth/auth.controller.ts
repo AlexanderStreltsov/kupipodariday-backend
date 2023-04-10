@@ -22,7 +22,7 @@ export class AuthController {
   async signup(
     @Body() createUserDto: CreateUserDto,
   ): Promise<TUserWithoutPass> {
-    const user = await this.usersService.create(createUserDto);
+    const user = await this.usersService.createUser(createUserDto);
     delete user.password;
 
     this.authService.auth(user);
