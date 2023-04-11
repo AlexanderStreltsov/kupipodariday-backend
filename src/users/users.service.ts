@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
+import { Repository, FindManyOptions, FindOneOptions, Not } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,6 +14,7 @@ import { WishesService } from '../wishes/wishes.service';
 import {
   USER_EXIST_MSG,
   USER_NOT_FOUND_MSG,
+  getSameValueError,
 } from '../constants/error-messages';
 import { type TUserWithoutPass, type TUserWithoutEmailAndPass } from '../types';
 
@@ -60,6 +61,17 @@ export class UsersService {
   }
 
   /**
+   * common methods
+   */
+  async checkFieldSameValue(fieldName: string, query: FindOneOptions<User>) {
+    const userWithSameField = await this.findOne(query);
+
+    if (userWithSameField) {
+      throw new ConflictException(getSameValueError(fieldName));
+    }
+  }
+
+  /**
    * API methods
    */
   async createUser(createUserDto: CreateUserDto) {
@@ -85,7 +97,19 @@ export class UsersService {
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<TUserWithoutPass> {
-    const { password } = updateUserDto;
+    const { email, password, username } = updateUserDto;
+
+    if (email) {
+      await this.checkFieldSameValue('email', {
+        where: { id: Not(id), email },
+      });
+    }
+
+    if (username) {
+      await this.checkFieldSameValue('username', {
+        where: { id: Not(id), username },
+      });
+    }
 
     if (password) {
       const newPassword = await this.hashServise.createHash(password);
