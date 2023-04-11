@@ -20,6 +20,9 @@ export const OFFERS_SUM_MSG = 'Сумма взноса превышает сто
 export const OFFERS_CANT_EDIT_MSG =
   'Внести деньги на собственный подарок невозможно';
 
+export const getSameValueError = (field: string) =>
+  `Пользователь с таким ${field} уже существует`;
+
 export const mustBeString = (field: string) =>
   `Поле ${field} должно быть строкой`;
 
